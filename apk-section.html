@@ -42,7 +42,7 @@
             <!-- APK Grid -->
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
                 <!-- APK Item 1 -->
-                <div class="premium-service-card group fade-in-scroll">
+                <div id="multi-app" class="premium-service-card group fade-in-scroll">
                     <!-- Big Logo Image with 3:4 aspect ratio -->
                     <div class="flex justify-center mb-6">
                         <div class="product-image">
@@ -73,11 +73,11 @@
                             <i class="fas fa-download"></i>
                         </button>
                         <div class="flex gap-2">
-                            <button class="premium-use-btn text-center flex-1" onclick="copyAppLink('Multi App')">
+                            <button class="premium-use-btn text-center flex-1" onclick="copyAppLink('multi-app', 'Multi App')">
                                 <span>Copy Link</span>
                                 <i class="fas fa-link"></i>
                             </button>
-                            <button class="premium-use-btn text-center flex-1" onclick="shareApp('Multi App')">
+                            <button class="premium-use-btn text-center flex-1" onclick="shareApp('multi-app', 'Multi App')">
                                 <span>Share</span>
                                 <i class="fas fa-share-alt"></i>
                             </button>
@@ -87,7 +87,7 @@
                 </div>
 
                 <!-- APK Item 2 -->
-                <div class="premium-service-card group fade-in-scroll" data-delay="100">
+                <div id="magic-eraser" class="premium-service-card group fade-in-scroll" data-delay="100">
                     <!-- Big Logo Image with 3:4 aspect ratio -->
                     <div class="flex justify-center mb-6">
                         <div class="product-image">
@@ -118,11 +118,11 @@ that removes objects, emojis, watermarks, and backgrounds with ease. Retouch, ex
                             <i class="fas fa-download"></i>
                         </button>
                         <div class="flex gap-2">
-                            <button class="premium-use-btn text-center flex-1" onclick="copyAppLink('Magic Eraser')">
+                            <button class="premium-use-btn text-center flex-1" onclick="copyAppLink('magic-eraser', 'Magic Eraser')">
                                 <span>Copy Link</span>
                                 <i class="fas fa-link"></i>
                             </button>
-                            <button class="premium-use-btn text-center flex-1" onclick="shareApp('Magic Eraser')">
+                            <button class="premium-use-btn text-center flex-1" onclick="shareApp('magic-eraser', 'Magic Eraser')">
                                 <span>Share</span>
                                 <i class="fas fa-share-alt"></i>
                             </button>
@@ -132,7 +132,7 @@ that removes objects, emojis, watermarks, and backgrounds with ease. Retouch, ex
                 </div>
 
                 <!-- APK Item 3 -->
-                <div class="premium-service-card group fade-in-scroll" data-delay="200">
+                <div id="capcut-pro" class="premium-service-card group fade-in-scroll" data-delay="200">
                     <!-- Big Logo Image with 3:4 aspect ratio -->
                     <div class="flex justify-center mb-6">
                         <div class="product-image">
@@ -157,16 +157,16 @@ that removes objects, emojis, watermarks, and backgrounds with ease. Retouch, ex
                     </div>
                     
                     <div class="flex flex-col gap-3 mt-6">
-                        <button class="premium-use-btn text-center" onclick="copyAppLink('https://www.mediafire.com/file/v3x7b9wmhtl0pnc/CapCut_15.5.0_[Mod].apk/file', 'capcut pro')">
+                        <button class="premium-use-btn text-center" onclick="downloadAPK('https://www.mediafire.com/file/v3x7b9wmhtl0pnc/CapCut_15.5.0_[Mod].apk/file', 'CapCut Pro')">
                             <span>Download APK</span>
                             <i class="fas fa-download"></i>
                         </button>
                         <div class="flex gap-2">
-                            <button class="premium-use-btn text-center flex-1" onclick="copyAppLink('capcut pro')">
+                            <button class="premium-use-btn text-center flex-1" onclick="copyAppLink('capcut-pro', 'CapCut Pro')">
                                 <span>Copy Link</span>
                                 <i class="fas fa-link"></i>
                             </button>
-                            <button class="premium-use-btn text-center flex-1" onclick="shareApp('capcut pro')">
+                            <button class="premium-use-btn text-center flex-1" onclick="shareApp('capcut-pro', 'CapCut Pro')">
                                 <span>Share</span>
                                 <i class="fas fa-share-alt"></i>
                             </button>
@@ -243,6 +243,24 @@ that removes objects, emojis, watermarks, and backgrounds with ease. Retouch, ex
 
     <script src="main.js"></script>
     <script>
+        // Handle direct navigation to specific APK when page loads with hash
+        document.addEventListener('DOMContentLoaded', function() {
+            const hash = window.location.hash;
+            if (hash) {
+                const targetElement = document.querySelector(hash);
+                if (targetElement) {
+                    setTimeout(() => {
+                        targetElement.scrollIntoView({ behavior: 'smooth' });
+                        // Add highlight effect
+                        targetElement.classList.add('highlight-product');
+                        setTimeout(() => {
+                            targetElement.classList.remove('highlight-product');
+                        }, 3000);
+                    }, 500);
+                }
+            }
+        });
+
         // APK Download Functionality - Opens MediaFire site
         function downloadAPK(downloadUrl, appName) {
             // Open the MediaFire link in a new tab
@@ -250,13 +268,14 @@ that removes objects, emojis, watermarks, and backgrounds with ease. Retouch, ex
             showNotification(`Opening ${appName} download page...`, 'info');
         }
         
-        // Copy App Link Functionality - Copies website URL
-        function copyAppLink(appName) {
-            const websiteUrl = window.location.href;
+        // Copy App Link Functionality - Copies direct product URL
+        function copyAppLink(productId, appName) {
+            const baseUrl = window.location.origin + window.location.pathname;
+            const productUrl = `${baseUrl}#${productId}`;
             
-            navigator.clipboard.writeText(websiteUrl)
+            navigator.clipboard.writeText(productUrl)
                 .then(() => {
-                    showNotification(`${appName} page link copied to clipboard!`, 'success');
+                    showNotification(`${appName} direct link copied to clipboard!`, 'success');
                 })
                 .catch(err => {
                     console.error('Failed to copy: ', err);
@@ -264,29 +283,30 @@ that removes objects, emojis, watermarks, and backgrounds with ease. Retouch, ex
                 });
         }
         
-        // Share App Functionality - Shares website URL
-        function shareApp(appName) {
-            const websiteUrl = window.location.href;
-            const shareText = `Check out ${appName} on Eclipsia Techs: ${websiteUrl}`;
+        // Share App Functionality - Shares direct product URL
+        function shareApp(productId, appName) {
+            const baseUrl = window.location.origin + window.location.pathname;
+            const productUrl = `${baseUrl}#${productId}`;
+            const shareText = `Check out ${appName} on Eclipsia Techs: ${productUrl}`;
             
             if (navigator.share) {
                 navigator.share({
                     title: `${appName} - Eclipsia Techs`,
                     text: `Check out ${appName} on Eclipsia Techs`,
-                    url: websiteUrl,
+                    url: productUrl,
                 })
                 .then(() => console.log('Successful share'))
                 .catch((error) => {
                     console.log('Error sharing:', error);
                     // Fallback to clipboard
                     navigator.clipboard.writeText(shareText)
-                        .then(() => showNotification('App page link copied to clipboard!', 'success'))
+                        .then(() => showNotification('App direct link copied to clipboard!', 'success'))
                         .catch(err => showNotification('Failed to share app', 'error'));
                 });
             } else {
                 // Fallback for browsers that don't support Web Share API
                 navigator.clipboard.writeText(shareText)
-                    .then(() => showNotification('App page link copied to clipboard!', 'success'))
+                    .then(() => showNotification('App direct link copied to clipboard!', 'success'))
                     .catch(err => showNotification('Failed to share app', 'error'));
             }
         }
